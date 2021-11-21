@@ -15,7 +15,7 @@ class App extends Component {
     }
 
     addProduct(e) {
-        if(this.state._id) {
+        if (this.state._id) {
             fetch(`/api/products/${this.state._id}`, {
                 method: 'PUT',
                 body: JSON.stringify(this.state),
@@ -24,13 +24,13 @@ class App extends Component {
                     'Content-Type': 'application/json'
                 }
             })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data)
-                M.toast({html: 'Task Updated'});
-                this.setState({name: '', price: '', _id: ''});
-            })
-        }else {
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data)
+                    M.toast({ html: 'Task Updated' });
+                    this.setState({ name: '', price: '', _id: '' });
+                })
+        } else {
             fetch('/api/products', {
                 method: 'POST',
                 body: JSON.stringify(this.state),
@@ -39,20 +39,20 @@ class App extends Component {
                     'Content-Type': 'application/json'
                 }
             })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                M.toast({html: 'Product Saved'});
-                this.setState({name: '', price: ''});
-                this.fetchProducts();
-            })
-            .catch(err => console.error(err));
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    M.toast({ html: 'Product Saved' });
+                    this.setState({ name: '', price: '' });
+                    this.fetchProducts();
+                })
+                .catch(err => console.error(err));
         }
 
         e.preventDefault();
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.fetchProducts();
     }
 
@@ -61,7 +61,7 @@ class App extends Component {
             .then(res => res.json())
             .then(data => {
                 console.log(data)
-                this.setState({products: data});
+                this.setState({ products: data });
                 this.console.log(this.state.products);
             });
     }
@@ -79,14 +79,14 @@ class App extends Component {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            }  
+            }
         })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-            M.toast({html: 'Product Deleted'});
-            this.fetchProducts();
-        });
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                M.toast({ html: 'Product Deleted' });
+                this.fetchProducts();
+            });
     }
 
     updateProduct(id) {
@@ -105,35 +105,33 @@ class App extends Component {
     render() {
         return (
             <div>
-                <nav className="red darken-4">
-                    <div className="container">
-                        <a className="brand-logo" hred="/">Product List</a>
-                    </div>
-                </nav>
-                                
+                <div className="container">
+                    <h1 className="brand-logo center-align"  hred="/">Bakery Product List</h1>
+                </div>
+
                 <div className="container">
                     <div className="row">
                         <div className="col s5">
                             <div className="card">
                                 <div className="card-content">
-                                    <form onSubmit={this.addProduct}>
+                                    <form onSubmit={this.addProduct} className="center-align">
                                         <div className="row">
                                             <div className="input-field col s12">
-                                                <input name="name" onChange={this.handleChange} type="text" placeholder="Product Name" value={this.state.name}/>
+                                                <input name="name" onChange={this.handleChange} type="text" placeholder="Product Name" value={this.state.name} />
                                             </div>
                                         </div>
                                         <div className="row">
                                             <div className="input-field col s12">
-                                                <input name="price" onChange={this.handleChange} type="number" min="0.00" step="0.01" placeholder="Product Price ($)" value={this.state.price}/>
+                                                <input name="price" onChange={this.handleChange} type="number" min="0.00" step="0.01" placeholder="Product Price ($)" value={this.state.price} />
                                             </div>
                                         </div>
                                         <button type="submit" className="btn red darken-4">Add</button>
-                                    </form>                                        
+                                    </form>
                                 </div>
                             </div>
                         </div>
                         <div className="col s7">
-                            <table>
+                            <table className="striped">
                                 <thead>
                                     <tr>
                                         <th>Name</th>
@@ -148,10 +146,10 @@ class App extends Component {
                                                     <td>{product.name}</td>
                                                     <td>{product.price}</td>
                                                     <td>
-                                                        <button className="btn red darken-4" 
-                                                        onClick={ () => this.updateProduct(product._id)}>Update</button>
-                                                        <button className="btn red darken-4" style={{margin: '4px'}} 
-                                                        onClick={ () => this.deleteProduct(product._id)}>Delete</button>
+                                                        <button className="btn red darken-4"
+                                                            onClick={() => this.updateProduct(product._id)}>Update</button>
+                                                        <button className="btn red darken-4" style={{ margin: '4px' }}
+                                                            onClick={() => this.deleteProduct(product._id)}>Delete</button>
                                                     </td>
                                                 </tr>
                                             )
@@ -165,7 +163,6 @@ class App extends Component {
 
             </div>
 
-            
         )
     }
 }
