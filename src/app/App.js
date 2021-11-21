@@ -7,30 +7,47 @@ class App extends Component {
         this.state = {
             name: '',
             price: '',
-            products: []
+            products: [],
+            _id: ''
         };
         this.addProduct = this.addProduct.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
 
     addProduct(e) {
-        //console.log(this.state);
-        fetch('/api/products', {
-            method: 'POST',
-            body: JSON.stringify(this.state),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-            M.toast({html: 'Product Saved'});
-            this.setState({name: '', price: ''});
-            this.fetchProducts();
-        })
-        .catch(err => console.error(err));
+        if(this.state._id) {
+            fetch(`/api/products/${this.state._id}`, {
+                method: 'PUT',
+                body: JSON.stringify(this.state),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                M.toast({html: 'Task Updated'});
+                this.setState({name: '', price: '', _id: ''});
+            })
+        }else {
+            fetch('/api/products', {
+                method: 'POST',
+                body: JSON.stringify(this.state),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                M.toast({html: 'Product Saved'});
+                this.setState({name: '', price: ''});
+                this.fetchProducts();
+            })
+            .catch(err => console.error(err));
+        }
 
         e.preventDefault();
     }
@@ -54,6 +71,35 @@ class App extends Component {
         this.setState({
             [name]: value
         });
+    }
+
+    deleteProduct(id) {
+        fetch(`/api/products/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }  
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            M.toast({html: 'Product Deleted'});
+            this.fetchProducts();
+        });
+    }
+
+    updateProduct(id) {
+        fetch(`/api/products/${id}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                this.setState({
+                    name: data.name,
+                    price: data.price,
+                    _id: data._id
+                })
+            });
     }
 
     render() {
@@ -101,6 +147,12 @@ class App extends Component {
                                                 <tr key={product._id}>
                                                     <td>{product.name}</td>
                                                     <td>{product.price}</td>
+                                                    <td>
+                                                        <button className="btn red darken-4" 
+                                                        onClick={ () => this.updateProduct(product._id)}>Update</button>
+                                                        <button className="btn red darken-4" style={{margin: '4px'}} 
+                                                        onClick={ () => this.deleteProduct(product._id)}>Delete</button>
+                                                    </td>
                                                 </tr>
                                             )
                                         })
